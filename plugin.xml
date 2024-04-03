@@ -23,6 +23,9 @@
     <js-module src="www/AppAvailability.js" name="AppAvailability">
         <clobbers target="appAvailability" />
     </js-module>
+
+    <variable name="CORDOVA_ANDROID_QUERIES" value="" />
+
     
     <!-- iOS -->
     <platform name="ios">
