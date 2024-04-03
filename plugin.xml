@@ -36,6 +36,9 @@
         
         <header-file src="src/ios/AppAvailability.h" />
         <source-file src="src/ios/AppAvailability.m" />
+
+        <hook type="after_plugin_add" src="hooks/update_ios_plist.js" />
+
     </platform>
     
     <!-- Android -->
