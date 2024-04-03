@@ -36,30 +36,35 @@ module.exports = function (context) {
         let index = lines.findIndex(line => line.includes('<key>LSApplicationQueriesSchemes</key>'));
 
         if (index === -1) {
-            throw new Error('LSApplicationQueriesSchemes key not found in Info.plist.');
+            // If LSApplicationQueriesSchemes key not found, add it before adding URL schemes
+            let arrayEndIndex = lines.findIndex((line, i) => i > index && line.includes('</array>'));
+            if (arrayEndIndex === -1) {
+                throw new Error('Invalid Info.plist format.');
+            }
+            lines.splice(arrayEndIndex, 0, '    <key>LSApplicationQueriesSchemes</key>', '    <array>');
+            index = arrayEndIndex; // Reset index to the newly added LSApplicationQueriesSchemes key position
         }
 
-        let startIndex = lines.findIndex((line, i) => i > index && line.includes('<array>'));
-        let endIndex = lines.findIndex((line, i) => i > startIndex && line.includes('</array>'));
-
-        if (startIndex === -1 || endIndex === -1) {
+        // Find the end index of the array
+        let endIndex = lines.findIndex((line, i) => i > index && line.includes('</array>'));
+        if (endIndex === -1) {
             throw new Error('Invalid Info.plist format.');
         }
 
+        // Extract existing schemes
         let existingSchemes = [];
-        for (let i = startIndex + 1; i < endIndex; i++) {
+        for (let i = index + 1; i < endIndex; i++) {
             if (lines[i].includes('<string>')) {
                 existingSchemes.push(lines[i].trim().replace('<string>', '').replace('</string>', ''));
             }
         }
 
+        // Add new URL schemes
         let newSchemes = urlSchemes.split(',').map(scheme => scheme.trim()).filter(scheme => !existingSchemes.includes(scheme));
-
         if (newSchemes.length === 0) {
             console.log('No new URL Schemes to add.');
             return;
         }
-
         lines.splice(endIndex, 0, ...newSchemes.map(scheme => `    <string>${scheme}</string>`));
 
         let updatedPlistData = lines.join('\n');
