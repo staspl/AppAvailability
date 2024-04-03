@@ -24,13 +24,23 @@ module.exports = function (context) {
     fs.readFile(manifestPath, 'utf-8', (err, data) => {
         if (err) throw err;
 
-        let updatedManifest = data.replace('</manifest>', '');
+        let updatedManifest = data;
+        let queriesIndex = data.indexOf('<queries>'); // Check if <queries> exists
+
+        let packages = ''; // Accumulate package elements
 
         queriesValue.split(',').forEach(packageName => {
-            updatedManifest += `<queries><package android:name="${packageName}"/></queries>`;
+            packages += `<package android:name="${packageName}"/>`;
         });
 
-        updatedManifest += '</manifest>';
+        if (queriesIndex !== -1) {
+            // If <queries> exists, append new packages inside it
+            let endIndex = data.indexOf('</queries>', queriesIndex);
+            updatedManifest = data.slice(0, endIndex) + packages + data.slice(endIndex);
+        } else {
+            // If <queries> doesn't exist, add it with all packages
+            updatedManifest = data.replace('</manifest>', `<queries>${packages}</queries></manifest>`);
+        }
 
         fs.writeFile(manifestPath, updatedManifest, (err) => {
             if (err) throw err;
