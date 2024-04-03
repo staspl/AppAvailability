@@ -7,6 +7,10 @@ module.exports = function (context) {
     console.log('Hook script update_ios_plist.js is executing.');
 
     try {
+
+        const debug_context = JSON.stringify(context);
+        console.log('Context:', debug_context);
+        
         const projectRoot = context.opts.projectRoot;
         const projectName = context.opts.projectName;
         console.log('Project Root:', projectRoot);
