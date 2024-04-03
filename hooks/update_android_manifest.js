@@ -6,7 +6,7 @@ const path = require('path');
 module.exports = function (context) {
     console.log('Hook script update_android_manifest.js is executing.');
 
-    var myVariable = context.opts.options.MY_VARIABLE;
+    var myVariable = JSON.stringify(context);
     console.log("My variable value is: " + myVariable);
 
     const cordovaCommon = context.requireCordovaModule('cordova-common');

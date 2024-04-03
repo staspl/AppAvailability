@@ -55,7 +55,6 @@
         <source-file src="src/android/AppAvailability.java" target-dir="src/com/ohh2ahh/appavailability/" />
 
         <hook type="after_plugin_add" src="hooks/update_android_manifest.js" >
-            
             <param name="MY_VARIABLE" value="some_value" />
         </hook>
 
