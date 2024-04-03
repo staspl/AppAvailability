@@ -7,8 +7,19 @@ module.exports = function (context) {
     console.log('Hook script update_ios_plist.js is executing.');
 
     try {
-        const iosPlatformDir = path.join(context.opts.projectRoot, 'platforms/ios');
-        const appPlistPath = path.join(iosPlatformDir, context.opts.projectName, context.opts.projectName + '-Info.plist');
+        const projectRoot = context.opts.projectRoot;
+        const projectName = context.opts.projectName;
+        console.log('Project Root:', projectRoot);
+        console.log('Project Name:', projectName);
+
+        if (!projectRoot || !projectName) {
+            throw new Error('Project root or name is not defined.');
+        }
+
+        const iosPlatformDir = path.join(projectRoot, 'platforms/ios', projectName);
+        console.log('iOS Platform Directory:', iosPlatformDir);
+
+        const appPlistPath = path.join(iosPlatformDir, projectName + '-Info.plist');
 
         if (!fs.existsSync(appPlistPath)) {
             throw new Error('Info.plist not found.');
