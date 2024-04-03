@@ -6,7 +6,6 @@ const path = require('path');
 module.exports = function (context) {
     console.log('Hook script update_android_manifest.js is executing.');
 
-    const cordovaCommon = context.requireCordovaModule('cordova-common');
     const androidPlatformDir = path.join(context.opts.projectRoot, 'platforms/android');
     const manifestPath = path.join(androidPlatformDir, 'app/src/main/AndroidManifest.xml');
 
