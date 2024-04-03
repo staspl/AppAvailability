@@ -54,7 +54,10 @@
 
         <source-file src="src/android/AppAvailability.java" target-dir="src/com/ohh2ahh/appavailability/" />
 
-        <hook type="after_plugin_install" src="hooks/update_android_manifest.js" />
+        <hook type="after_plugin_install" src="scripts/update_android_manifest.js" />
+            <param name="CORDOVA_ANDROID_QUERIES" value="$CORDOVA_ANDROID_QUERIES" />
+        </hook>
+
     </platform>
     
 </plugin>
