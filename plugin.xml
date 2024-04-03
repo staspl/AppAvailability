@@ -24,8 +24,7 @@
         <clobbers target="appAvailability" />
     </js-module>
 
-    <variable name="CORDOVA_ANDROID_QUERIES" value="" />
-
+    <preference name="CORDOVA_ANDROID_QUERIES" default=""/>
     
     <!-- iOS -->
     <platform name="ios">
