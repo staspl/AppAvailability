@@ -24,7 +24,7 @@
         <clobbers target="appAvailability" />
     </js-module>
 
-    <preference name="CORDOVA_ANDROID_QUERIES" default=""/>
+    
     
     <!-- iOS -->
     <platform name="ios">
@@ -46,11 +46,13 @@
             </feature>
         </config-file>
 
+<!-- 
         <config-file target="AndroidManifest.xml" parent="/manifest">
             <queries>
                 <package android:name="dummy.package.name" />
             </queries>
         </config-file>
+-->
 
         <source-file src="src/android/AppAvailability.java" target-dir="src/com/ohh2ahh/appavailability/" />
 
