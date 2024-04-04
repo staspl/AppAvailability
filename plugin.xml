@@ -7,9 +7,9 @@
     
     <name>AppAvailability</name>
     
-    <description>This plugin for Cordova and PhoneGap allows you to check if an app is installed. It requires an URI Scheme (iOS) or a Package Name (Android).</description>
+    <description>A Cordova and PhoneGap plugin for checking the availability of installed apps using URI schemes (iOS) or package names (Android).</description>
     
-    <keywords>Cordova,PhoneGap,plugin,app,availability,installed, URIScheme,URI,Scheme,PackageName,Package,Name,iOS,Android</keywords>
+    <keywords>Cordova, PhoneGap, plugin, app, availability, installed, URI scheme, URI, Scheme, Package Name, iOS, Android</keywords>
     
     <repo>https://github.com/kelter-antunes/AppAvailability.git</repo>
     <issue>https://github.com/kelter-antunes/AppAvailability/issues</issue>
