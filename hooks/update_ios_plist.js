@@ -28,6 +28,7 @@ module.exports = function (context) {
         let urlSchemes = context.opts.cli_variables.CORDOVA_IOS_URL_SCHEMES;
         if (!urlSchemes) {
             console.log('CORDOVA_IOS_URL_SCHEMES variable not provided.');
+            return; // Exit early if urlSchemes is empty
         }
 
         let plistData = fs.readFileSync(appPlistPath, 'utf8');
