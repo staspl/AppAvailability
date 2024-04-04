@@ -1,7 +1,7 @@
 {
   "name": "cordova-plugin-appavailability",
   "version": "0.4.2",
-  "description": "This plugin for Cordova and PhoneGap allows you to check if an app is installed. It requires an URI Scheme (iOS) or a Package Name (Android).",
+  "description": "A Cordova and PhoneGap plugin for checking the availability of installed apps using URI schemes (iOS) or package names (Android).",
   "cordova": {
     "id": "cordova-plugin-appavailability",
     "platforms": [
