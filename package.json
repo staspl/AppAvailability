@@ -43,5 +43,8 @@
   "bugs": {
     "url": "https://github.com/ohh2ahh/AppAvailability/issues"
   },
-  "homepage": "https://github.com/ohh2ahh/AppAvailability#readme"
+  "homepage": "https://github.com/ohh2ahh/AppAvailability#readme",
+  "dependencies": {
+    "plist": "^3.0.1"
+  }
 }
