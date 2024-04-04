@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { ConfigParser } = require('cordova-common');
+const plist = require('plist');
 
 module.exports = function (context) {
     console.log('Hook script update_ios_plist.js is executing.');
@@ -32,23 +33,22 @@ module.exports = function (context) {
         }
 
         let plistData = fs.readFileSync(appPlistPath, 'utf8');
-        let lines = plistData.split('\n');
+        let plistObject = plist.parse(plistData);
 
-        let index = lines.findIndex(line => line.includes('</dict>'));
-
-        if (index === -1) {
-            throw new Error('Invalid Info.plist format.');
+        // Add LSApplicationQueriesSchemes key
+        if (!plistObject.hasOwnProperty('LSApplicationQueriesSchemes')) {
+            plistObject['LSApplicationQueriesSchemes'] = [];
         }
-
-        lines.splice(index, 0, '    <key>LSApplicationQueriesSchemes</key>', '    <array>');
 
         // Add new URL schemes
         let newSchemes = urlSchemes.split(',').map(scheme => scheme.trim());
-        lines.splice(index + 2, 0, ...newSchemes.map(scheme => `        <string>${scheme}</string>`));
+        newSchemes.forEach(scheme => {
+            if (!plistObject['LSApplicationQueriesSchemes'].includes(scheme)) {
+                plistObject['LSApplicationQueriesSchemes'].push(scheme);
+            }
+        });
 
-        let updatedPlistData = lines.join('\n');
-
-        fs.writeFileSync(appPlistPath, updatedPlistData, 'utf8');
+        fs.writeFileSync(appPlistPath, plist.build(plistObject), 'utf8');
 
         console.log('Info.plist updated successfully.');
     } catch (error) {
