@@ -18,10 +18,18 @@
         return;
     }
     
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:scheme]]) {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
+    NSURL *appURL = [NSURL URLWithString:scheme];
+    NSBundle *bundle = [NSBundle bundleWithURL:appURL];
+    
+    if (bundle) {
+        NSString *version = [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+        NSString *bundleIdentifier = [bundle bundleIdentifier];
+        
+        NSDictionary *appInfo = @{@"version": version, @"appId": bundleIdentifier};
+        
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:appInfo];
     } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:NO];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"App not found"];
     }
     
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
