@@ -1,4 +1,4 @@
-package com.ohh2ahh.appavailability;
+package com.kelter.appavailability;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;

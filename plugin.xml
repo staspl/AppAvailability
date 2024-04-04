@@ -11,8 +11,8 @@
     
     <keywords>Cordova,PhoneGap,plugin,app,availability,installed, URIScheme,URI,Scheme,PackageName,Package,Name,iOS,Android</keywords>
     
-    <repo>https://github.com/ohh2ahh/AppAvailability.git</repo>
-    <issue>https://github.com/ohh2ahh/AppAvailability/issues</issue>
+    <repo>https://github.com/kelter-antunes/AppAvailability.git</repo>
+    <issue>https://github.com/kelter-antunes/AppAvailability/issues</issue>
     
     <license>MIT</license>
     
@@ -45,19 +45,11 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="AppAvailability">
-                <param name="android-package" value="com.ohh2ahh.appavailability.AppAvailability" />
+                <param name="android-package" value="com.kelter-antunes.appavailability.AppAvailability" />
             </feature>
         </config-file>
 
-<!-- 
-        <config-file target="AndroidManifest.xml" parent="/manifest">
-            <queries>
-                <package android:name="dummy.package.name" />
-            </queries>
-        </config-file>
--->
-
-        <source-file src="src/android/AppAvailability.java" target-dir="src/com/ohh2ahh/appavailability/" />
+        <source-file src="src/android/AppAvailability.java" target-dir="src/com/kelter/appavailability/" />
 
         <hook type="after_plugin_add" src="hooks/update_android_manifest.js" />
 
