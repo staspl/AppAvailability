@@ -16,7 +16,7 @@ module.exports = function (context) {
 
         let queriesValue = context.opts.cli_variables.CORDOVA_ANDROID_QUERIES;
         if (!queriesValue) {
-            throw new Error('CORDOVA_ANDROID_QUERIES variable not provided.');
+            console.log('CORDOVA_ANDROID_QUERIES variable not provided.');
         }
 
         fs.readFile(manifestPath, 'utf-8', (err, data) => {
