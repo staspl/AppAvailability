@@ -31,6 +31,8 @@ module.exports = function (context) {
             return; // Exit early if urlSchemes is empty
         }
 
+        return; // Exit early just for testing
+
         let plistData = fs.readFileSync(appPlistPath, 'utf8');
         let lines = plistData.split('\n');
 
