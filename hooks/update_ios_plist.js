@@ -31,43 +31,20 @@ module.exports = function (context) {
             return; // Exit early if urlSchemes is empty
         }
 
-
         let plistData = fs.readFileSync(appPlistPath, 'utf8');
         let lines = plistData.split('\n');
 
-        let index = lines.findIndex(line => line.includes('<key>LSApplicationQueriesSchemes</key>'));
+        let index = lines.findIndex(line => line.includes('</dict>'));
 
         if (index === -1) {
-            // If LSApplicationQueriesSchemes key not found, add it before adding URL schemes
-            let arrayEndIndex = lines.findIndex((line, i) => i > index && line.includes('</array>'));
-            if (arrayEndIndex === -1) {
-                throw new Error('Invalid Info.plist format.');
-            }
-            lines.splice(arrayEndIndex, 0, '    <key>LSApplicationQueriesSchemes</key>', '    <array>');
-            index = arrayEndIndex; // Reset index to the newly added LSApplicationQueriesSchemes key position
-        }
-
-        // Find the end index of the array
-        let endIndex = lines.findIndex((line, i) => i > index && line.includes('</array>'));
-        if (endIndex === -1) {
             throw new Error('Invalid Info.plist format.');
         }
 
-        // Extract existing schemes
-        let existingSchemes = [];
-        for (let i = index + 1; i < endIndex; i++) {
-            if (lines[i].includes('<string>')) {
-                existingSchemes.push(lines[i].trim().replace('<string>', '').replace('</string>', ''));
-            }
-        }
+        lines.splice(index, 0, '    <key>LSApplicationQueriesSchemes</key>', '    <array>');
 
         // Add new URL schemes
-        let newSchemes = urlSchemes.split(',').map(scheme => scheme.trim()).filter(scheme => !existingSchemes.includes(scheme));
-        if (newSchemes.length === 0) {
-            console.log('No new URL Schemes to add.');
-            return;
-        }
-        lines.splice(endIndex, 0, ...newSchemes.map(scheme => `    <string>${scheme}</string>`));
+        let newSchemes = urlSchemes.split(',').map(scheme => scheme.trim());
+        lines.splice(index + 2, 0, ...newSchemes.map(scheme => `        <string>${scheme}</string>`));
 
         let updatedPlistData = lines.join('\n');
 
