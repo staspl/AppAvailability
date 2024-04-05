@@ -2,11 +2,11 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="cordova-plugin-kelter-appavailability"
-        version="1.0.1">
+        version="1.0.2">
     
     <name>AppAvailability</name>
     
-    <description>A Cordova and PhoneGap plugin for checking the availability of installed apps using URI schemes (iOS) or package names (Android).</description>
+    <description>A Cordova plugin for checking the availability of installed apps using URI schemes (iOS) or package names (Android).</description>
     
     <keywords>Cordova, PhoneGap, plugin, app, availability, installed, URI scheme, URI, Scheme, Package Name, iOS, Android</keywords>
     

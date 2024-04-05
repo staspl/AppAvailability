@@ -1,42 +1,53 @@
 # AppAvailability for iOS and Android
 
-[![GitHub version](https://badge.fury.io/gh/ohh2ahh%2FAppAvailability.svg)](https://badge.fury.io/gh/ohh2ahh%2FAppAvailability) [![npm version](https://badge.fury.io/js/cordova-plugin-appavailability.svg)](https://badge.fury.io/js/cordova-plugin-appavailability)
+AppAvailability is a plugin for Apache Cordova that allows you to check if an app is installed on the user's device. It supports both iOS and Android platforms, utilizing URI schemes for iOS and package names for Android.
 
-A Plugin for Apache Cordova and Adobe PhoneGap by [ohh2ahh](http://ohh2ahh.com).
+## Important: iOS 9+ URL Scheme Whitelist
+Apple changed the `canOpenURL` method on iOS 9. Apps which are checking for URL Schemes have to declare these Schemes as it is submitted to Apple. The article [Quick Take on iOS 9 URL Scheme Changes](http://awkwardhare.com/post/121196006730/quick-take-on-ios-9-url-scheme-changes) explains the changes in detail.
 
-1. [Description](https://github.com/ohh2ahh/AppAvailability#1-description)
-2. [Installation](https://github.com/ohh2ahh/AppAvailability#2-installation)
-	2. [Automatically (Command-line Interface)](https://github.com/ohh2ahh/AppAvailability#automatically-command-line-interface)
-	2. [PhoneGap Build](https://github.com/ohh2ahh/AppAvailability#phonegap-build)
-3. [Usage](https://github.com/ohh2ahh/AppAvailability#3-usage)
-	3. [iOS](https://github.com/ohh2ahh/AppAvailability#ios)
-	3. [Android](https://github.com/ohh2ahh/AppAvailability#android)
-	3. [Full Example](https://github.com/ohh2ahh/AppAvailability#full-example)
-	3. [Old Approach (AppAvailability < 0.3.0)](https://github.com/ohh2ahh/AppAvailability#old-approach-appavailability--030)
-4. [Some URI Schemes / Package Names](https://github.com/ohh2ahh/AppAvailability#4-some-uri-schemes--package-names)
-5. [License](https://github.com/ohh2ahh/AppAvailability#5-license)
+## Important: Android 11+ Google rejecting Android applications due to the QUERY_ALL_PACKAGES used
+Google introduced a restriction on the QUERY_ALL_PACKAGES permission for apps on the Android operating system. This permission allowed apps to access a broad range of data on a user's device, potentially including sensitive information. However, its unrestricted usage posed privacy and security risks.
 
-## Important: iOS 9 and iOS 10 URL Scheme Whitelist
-Apple changed the `canOpenURL` method on iOS 9. Apps which are checking for URL Schemes have to declare these Schemes as it is submitted to Apple. The article [Quick Take on iOS 9 URL Scheme Changes](http://awkwardhare.com/post/121196006730/quick-take-on-ios-9-url-scheme-changes) expains the changes in detail.
+To mitigate these risks, Google implemented restrictions on the use of QUERY_ALL_PACKAGES starting with Android 11. Apps targeting this version and higher must adhere to stricter guidelines when requesting this permission. The Google Help [Use of the broad package (App) visibility (QUERY_ALL_PACKAGES) permission](https://support.google.com/googleplay/android-developer/answer/10158779?hl=en) explains the changes in detail.
 
-### Add URL Schemes to the Whitelist
-Simply open your app's .plist (usually `platforms/ios/<appname>/<appname>-Info.plist)` with an editor and add the following code with your needed Schemes.
 
-```xml
+### Whitelisting URL Schemes (iOS) and Package Visibility Needs (Android queries)
+Beginning with version XXX of the plugin, you can now easily add URL Schemes to the -Info.plist file and Android Package Queries to the AndoirdManifest.xml file by using Cordova plugin --variable when integrating the plugin into your application.
+
+```
+cordova plugin add https://github.com/kelter-antunes/AppAvailability.git --variable CORDOVA_ANDROID_QUERIES="com.facebook.android,com.twitter.android" --variable CORDOVA_IOS_URL_SCHEMES="facebook,twitter"
+```
+For Android:
+```
+--variable CORDOVA_ANDROID_QUERIES="com.facebook.android,com.twitter.android"
+```
+Will change the AndroidManifest.xml file to:
+```XML
+<queries>
+	<package android:name="com.facebook.android"/>
+	<package android:name="com.twitter.android"/>
+</queries>
+```
+
+For iOS:
+```
+--variable CORDOVA_IOS_URL_SCHEMES="facebook,twitter"
+```
+
+Will change the -Info.plist file to:
+```XML
 <key>LSApplicationQueriesSchemes</key>
 <array>
-    <string>twitter</string>
-    <string>whatsapp</string>
+	<string>facebook</string>
+	<string>twitter</string>
 </array>
 ```
 
+Both variables accept a list of Packages/URL Schemas separated by commas.
+
 ## 1. Description
 
-This plugin allows you to check if an app is installed on the user's device.
-It requires an URI Scheme (e.g. twitter://) on iOS or a Package Name (e.g com.twitter.android) on Android.
-
-* Ready for the Command-line Interface of Cordova / PhoneGap 3.0 and later
-* Works with PhoneGap Build
+This plugin enables you to verify if an app is installed on the user's device. It needs a URI Scheme (like twitter://) on iOS or a Package Name (like com.twitter.android) on Android.
 
 ### Supported Platforms
 
@@ -45,47 +56,18 @@ It requires an URI Scheme (e.g. twitter://) on iOS or a Package Name (e.g com.tw
 
 ## 2. Installation
 
-The Cordova CLI is the recommended way to install AppAvailability, see [The Command-line Interface](http://cordova.apache.org/docs/en/4.0.0/guide_cli_index.md.html#The%20Command-Line%20Interface). You can find the plugin on these registries:
-* [GitHub](https://github.com/ohh2ahh/AppAvailability)
-* [npm](https://www.npmjs.com/package/cordova-plugin-appavailability)
-* ~~[Cordova Plugin Registry](http://plugins.cordova.io/#/package/com.ohh2ahh.plugins.appavailability)~~ (deprecated [in favor of npm](http://cordova.apache.org/announcements/2015/04/21/plugins-release-and-move-to-npm.html))
-* ~~[PhoneGap Plugin Registry](https://build.phonegap.com/plugins/1054)~~ (deprecated)
-
-### Automatically (Command-line Interface)
-
-Simply run this command to add the latest version of AppAvailability from [npm](https://www.npmjs.com/package/cordova-plugin-appavailability) to your project:
+Simply run this command to add the latest version of AppAvailability from [npm](https://www.npmjs.com/package/cordova-plugin-kelter-appavailability) to your project:
 ```
-$ cordova plugin add cordova-plugin-appavailability --save
+$ cordova plugin add cordova-plugin-kelter-appavailability --save
 ```
 
-Don't forget to prepare and compile your project:
+Alternatively, you can install AppAvailability from [GitHub](https://github.com/kelter-antunes/AppAvailability):
 ```
-$ cordova prepare
-$ cordova build
-```
-
-You don't have to reference the JavaScript in your `index.html`.
-
-Alternatively you can install AppAvailability from [GitHub](https://github.com/ohh2ahh/AppAvailability):
-```
-$ cordova plugin add https://github.com/ohh2ahh/AppAvailability.git --save
+$ cordova plugin add https://github.com/kelter-antunes/AppAvailability.git --save
 ```
 
-### PhoneGap Build
-
-AppAvailability works with PhoneGap build too. You can include this plugin from either npm or directly from this repository:
-```xml
-<plugin name="cordova-plugin-appavailability" source="npm" />
-```
-```xml
-<plugin spec="https://github.com/ohh2ahh/AppAvailability.git" source="git" />
-```
-
-There is no need to reference the JavaScript in your `index.html`.
 
 ## 3. Usage
-
-:exclamation: The code changed in version 0.3.0 and supports now success and error callbacks! But you can still use the old approach, which is [described below](https://github.com/ohh2ahh/AppAvailability#old-approach-appavailability--030).
 
 ### iOS
 
@@ -140,20 +122,7 @@ appAvailability.check(
 );
 ```
 
-### Old Approach (AppAvailability < 0.3.0)
-
-The only thing you have to do is replacing `appAvailability.check` with `appAvailability.checkBool`:
-
-```javascript
-appAvailability.checkBool('twitter://', function(availability) {
-    // availability is either true or false
-    if(availability) { console.log('Twitter is available'); }
-});
-```
-
 ## 4. Some URI Schemes / Package Names
-
-[How do I get the URI Scheme / Package Name?](https://github.com/ohh2ahh/AppAvailability/issues/2#issuecomment-22203591)
 
 Twitter:
 * iOS: `twitter://`
