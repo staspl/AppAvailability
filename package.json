@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-kelter-appavailability",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Cordova plugin for checking the availability of installed apps using URI schemes (iOS) or package names (Android).",
   "cordova": {
     "id": "cordova-plugin-kelter-appavailability",
@@ -46,5 +46,8 @@
   "homepage": "https://github.com/kelter-antunes/AppAvailability#readme",
   "dependencies": {
     "plist": "^3.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
