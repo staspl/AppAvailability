@@ -12,7 +12,7 @@ To mitigate these risks, Google implemented restrictions on the use of QUERY_ALL
 
 
 ### Whitelisting URL Schemes (iOS) and Package Visibility Needs (Android queries)
-Beginning with version XXX of the plugin, you can now easily add URL Schemes to the -Info.plist file and Android Package Queries to the AndoirdManifest.xml file by using Cordova plugin --variable when integrating the plugin into your application.
+Beginning with version 1.0.3 (and OS11_1.0.3) of the plugin, you can now easily add URL Schemes to the -Info.plist file and Android Package Queries to the AndoirdManifest.xml file by using Cordova plugin --variable when integrating the plugin into your application.
 
 ```
 cordova plugin add https://github.com/kelter-antunes/AppAvailability.git --variable CORDOVA_ANDROID_QUERIES="com.facebook.android,com.twitter.android" --variable CORDOVA_IOS_URL_SCHEMES="facebook,twitter"
