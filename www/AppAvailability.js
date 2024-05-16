@@ -1,3 +1,5 @@
+var exec = require('cordova/exec');
+
 /**
  * Removes the trailing and leading whitespace on an URL scheme and verifies it's not empty.
  * 
@@ -20,7 +22,7 @@ var appAvailability = {
     check: function(urlScheme, successCallback, errorCallback) {
         urlScheme = checkUrlScheme(urlScheme, errorCallback);
         if (urlScheme) {
-            cordova.exec(
+            exec(
                 function(success) { successCallback(success); },
                 function(error) { errorCallback(error); },
                 "AppAvailability",
