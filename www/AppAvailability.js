@@ -18,11 +18,11 @@ function checkUrlScheme(urlScheme, errorCallback) {
 var appAvailability = {
 
     check: function(urlScheme, successCallback, errorCallback) {
-        urlScheme = checkUrlScheme(urlScheme, errorCallback);
+        urlScheme = checkUrlScheme(urlScheme, function() { callback(false); });
         if (urlScheme) {
             cordova.exec(
-                successCallback,
-                errorCallback,
+                function(success) { callback(success); },
+                function(error) { callback(error); },
                 "AppAvailability",
                 "checkAvailability",
                 [urlScheme]
