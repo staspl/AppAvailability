@@ -12,13 +12,18 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 
 public class AppAvailability extends CordovaPlugin {
-    
+
     @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+    public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
         if ("checkAvailability".equals(action)) {
             try {
-                String uri = args.getString(0);
-                checkAvailability(uri, callbackContext);
+                final String uri = args.getString(0);
+                cordova.getThreadPool().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkAvailability(uri, callbackContext);
+                    }
+                });
             } catch (Exception e) {
                 callbackContext.error("Error processing checkAvailability: " + e.getMessage());
             }
@@ -27,31 +32,6 @@ public class AppAvailability extends CordovaPlugin {
         return false;
     }
 
-    /**
-     * Get the PackageInfo of the app with the specified URI.
-     * 
-     * @param uri the URI scheme of the app
-     * @return PackageInfo of the app if found, null otherwise
-     * @throws Exception if an error occurs while fetching package info
-     */
-    private PackageInfo getAppPackageInfo(String uri) throws Exception {
-        Context context = this.cordova.getActivity().getApplicationContext();
-        PackageManager pm = context.getPackageManager();
-        try {
-            return pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-        } catch (NameNotFoundException e) {
-            throw new Exception("Package not found: " + uri, e);
-        } catch (Exception e) {
-            throw new Exception("Error getting package info for: " + uri, e);
-        }
-    }
-
-    /**
-     * Check the availability of the app with the specified URI.
-     * 
-     * @param uri the URI scheme of the app
-     * @param callbackContext the callback context to send the result
-     */
     private void checkAvailability(String uri, CallbackContext callbackContext) {
         try {
             PackageInfo info = getAppPackageInfo(uri);
@@ -65,13 +45,18 @@ public class AppAvailability extends CordovaPlugin {
         }
     }
 
-    /**
-     * Convert PackageInfo to a JSONObject.
-     * 
-     * @param info the PackageInfo to convert
-     * @return JSONObject representing the PackageInfo
-     * @throws JSONException if JSON conversion fails
-     */
+    private PackageInfo getAppPackageInfo(String uri) throws Exception {
+        Context context = this.cordova.getActivity().getApplicationContext();
+        PackageManager pm = context.getPackageManager();
+        try {
+            return pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+        } catch (NameNotFoundException e) {
+            throw new Exception("Package not found: " + uri, e);
+        } catch (Exception e) {
+            throw new Exception("Error getting package info for: " + uri, e);
+        }
+    }
+
     private JSONObject convertPackageInfoToJson(PackageInfo info) throws JSONException {
         JSONObject json = new JSONObject();
         json.put("version", info.versionName);
