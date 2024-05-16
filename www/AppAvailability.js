@@ -1,48 +1,38 @@
 /**
- * Removes the trailing and leading whitespace on an URL scheme and verifies its
- * not empty.
+ * Removes the trailing and leading whitespace on a URL scheme and verifies it's not empty.
  * 
  * @param {String} urlScheme the URL scheme to check.
  * @param {Function} errorCallback to call when the urlScheme is empty.
  * 
- * @returns {String} urlScheme stripped by leading and trailing whitespace or 
- * undefined when it was empty.
+ * @returns {String} urlScheme stripped by leading and trailing whitespace or undefined when it was empty.
  */
 function checkUrlScheme(urlScheme, errorCallback) {
-    var trimmedUrlScheme = (urlScheme||"").trim();
+    var trimmedUrlScheme = (urlScheme || "").trim();
     if (!trimmedUrlScheme) {
-        errorCallback("empty urlScheme(\"" + urlScheme + "\") used.");
-        return
+        errorCallback("Empty URL scheme (\"" + urlScheme + "\") used.");
+        return;
     }
     return trimmedUrlScheme;
 }
 
 var appAvailability = {
 
+    /**
+     * Checks the availability of an app based on its URL scheme.
+     * 
+     * @param {String} urlScheme The URL scheme of the app to check.
+     * @param {Function} successCallback A callback function to call upon successful retrieval of app information.
+     * @param {Function} errorCallback A callback function to call upon failure or when no app is found.
+     */
     check: function(urlScheme, successCallback, errorCallback) {
         urlScheme = checkUrlScheme(urlScheme, errorCallback);
-        // Only call the native plugin if we have valid urlScheme
-        urlScheme && cordova.exec(
-            successCallback,
-            errorCallback,
-            "AppAvailability",
-            "checkAvailability",
-            [urlScheme]
-        );
-    },
-    
-    checkBool: function(urlScheme, callback) {
-        urlScheme = checkUrlScheme(urlScheme, function() { callback(false); });
-        // Only call the native plugin if we have valid urlScheme
-        urlScheme && cordova.exec(
-            function(success) { callback(success); },
-            function(error) { callback(error); },
-            "AppAvailability",
-            "checkAvailability",
-            [urlScheme]
-        );
+        // Only call the native plugin if we have a valid urlScheme
+        if (urlScheme) {
+            cordova.exec(successCallback, errorCallback, "AppAvailability", "checkAvailability", [urlScheme]);
+        }
     }
     
 };
 
-module.exports = appAvailability;
+// Expose the appAvailability object globally so it can be accessed from other scripts
+window.appAvailability = appAvailability;
