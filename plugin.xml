@@ -45,6 +45,11 @@
             </feature>
         </config-file>
 
+        <!-- Define minimum supported Android SDK version -->
+        <config-file parent="/manifest" target="AndroidManifest.xml">
+            <uses-sdk android:minSdkVersion="28" />
+        </config-file>
+
         <source-file src="src/android/AppAvailability.java" target-dir="src/com/kelter/appavailability/" />
 
         <hook type="after_plugin_add" src="hooks/update_android_manifest.js" />
