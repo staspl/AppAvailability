@@ -34,6 +34,15 @@ public class AppAvailability extends CordovaPlugin {
     }
 
     private void checkAvailability(String uri, CallbackContext callbackContext) {
+        // Dummy callback to the JavaScript side before checking package existence
+        JSONObject dummyJson = new JSONObject();
+        try {
+            dummyJson.put("message", "Dummy callback before checking package existence.");
+            callbackContext.success(dummyJson);
+        } catch (JSONException e) {
+            callbackContext.error("Error creating JSON object: " + e.getMessage());
+        }
+    
         try {
             PackageInfo info = getPackageInfoCompat(uri);
             if (info != null) {
