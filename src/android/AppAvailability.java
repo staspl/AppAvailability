@@ -16,8 +16,12 @@ public class AppAvailability extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if ("checkAvailability".equals(action)) {
-            String uri = args.getString(0);
-            checkAvailability(uri, callbackContext);
+            try {
+                String uri = args.getString(0);
+                checkAvailability(uri, callbackContext);
+            } catch (Exception e) {
+                callbackContext.error("Error processing checkAvailability: " + e.getMessage());
+            }
             return true;
         }
         return false;
@@ -28,14 +32,17 @@ public class AppAvailability extends CordovaPlugin {
      * 
      * @param uri the URI scheme of the app
      * @return PackageInfo of the app if found, null otherwise
+     * @throws Exception if an error occurs while fetching package info
      */
-    private PackageInfo getAppPackageInfo(String uri) {
+    private PackageInfo getAppPackageInfo(String uri) throws Exception {
         Context context = this.cordova.getActivity().getApplicationContext();
         PackageManager pm = context.getPackageManager();
         try {
             return pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
         } catch (NameNotFoundException e) {
-            return null;
+            throw new Exception("Package not found: " + uri, e);
+        } catch (Exception e) {
+            throw new Exception("Error getting package info for: " + uri, e);
         }
     }
 
@@ -46,15 +53,15 @@ public class AppAvailability extends CordovaPlugin {
      * @param callbackContext the callback context to send the result
      */
     private void checkAvailability(String uri, CallbackContext callbackContext) {
-        PackageInfo info = getAppPackageInfo(uri);
-        if (info != null) {
-            try {
+        try {
+            PackageInfo info = getAppPackageInfo(uri);
+            if (info != null) {
                 callbackContext.success(convertPackageInfoToJson(info));
-            } catch (JSONException e) {
-                callbackContext.error("Failed to convert package info to JSON.");
+            } else {
+                callbackContext.error("App not found for URI: " + uri);
             }
-        } else {
-            callbackContext.error("App not found.");
+        } catch (Exception e) {
+            callbackContext.error("Error checking availability: " + e.getMessage());
         }
     }
 
