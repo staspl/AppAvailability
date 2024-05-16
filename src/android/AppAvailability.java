@@ -9,29 +9,35 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageInfo;
+import android.util.Log;
 
 public class AppAvailability extends CordovaPlugin {
+
+    private static final String TAG = "AppAvailability";
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("checkAvailability")) {
             String packageName = args.getString(0);
-            this.checkAvailability(packageName, callbackContext);
+            cordova.getThreadPool().execute(() -> checkAvailability(packageName, callbackContext));
             return true;
         }
         return false;
     }
 
     private void checkAvailability(String packageName, CallbackContext callbackContext) {
+        Log.d(TAG, "Checking availability for package: " + packageName);
         PackageInfo packageInfo = getAppPackageInfo(packageName);
         if (packageInfo != null) {
             try {
                 JSONObject json = convertPackageInfoToJson(packageInfo);
                 callbackContext.success(json);
             } catch (JSONException e) {
+                Log.e(TAG, "Error converting package info to JSON", e);
                 callbackContext.error("Error converting package info to JSON");
             }
         } else {
+            Log.d(TAG, "App not found for package: " + packageName);
             callbackContext.error("App not found");
         }
     }
@@ -43,6 +49,7 @@ public class AppAvailability extends CordovaPlugin {
         try {
             return packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
         } catch (PackageManager.NameNotFoundException e) {
+            Log.d(TAG, "Package not found: " + packageName, e);
             return null;
         }
     }
