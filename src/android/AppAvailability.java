@@ -1,15 +1,15 @@
 package com.kelter.appavailability;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 
 public class AppAvailability extends CordovaPlugin {
 
@@ -34,7 +34,7 @@ public class AppAvailability extends CordovaPlugin {
 
     private void checkAvailability(String uri, CallbackContext callbackContext) {
         try {
-            PackageInfo info = getAppPackageInfo(uri);
+            PackageInfo info = getPackageInfoCompat(uri);
             if (info != null) {
                 callbackContext.success(convertPackageInfoToJson(info));
             } else {
@@ -45,12 +45,17 @@ public class AppAvailability extends CordovaPlugin {
         }
     }
 
-    private PackageInfo getAppPackageInfo(String uri) throws Exception {
+    private PackageInfo getPackageInfoCompat(String uri) throws Exception {
         Context context = this.cordova.getActivity().getApplicationContext();
         PackageManager pm = context.getPackageManager();
         try {
-            return pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-        } catch (NameNotFoundException e) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                return pm.getPackageInfo(uri, PackageManager.PackageInfoFlags.of(PackageManager.GET_ACTIVITIES));
+            } else {
+                @SuppressWarnings("deprecation")
+                return pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
             throw new Exception("Package not found: " + uri, e);
         } catch (Exception e) {
             throw new Exception("Error getting package info for: " + uri, e);
