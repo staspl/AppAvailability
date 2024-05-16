@@ -9,7 +9,7 @@
 function checkUrlScheme(urlScheme, errorCallback) {
     var trimmedUrlScheme = (urlScheme || "").trim();
     if (!trimmedUrlScheme) {
-        errorCallback("Empty URL scheme (\"" + urlScheme + "\") used.");
+        errorCallback("Invalid URL scheme (\"" + urlScheme + "\"). Please ensure it's not empty or contains only whitespace.");
         return;
     }
     return trimmedUrlScheme;
