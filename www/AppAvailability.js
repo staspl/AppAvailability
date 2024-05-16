@@ -10,7 +10,7 @@ function checkUrlScheme(urlScheme, errorCallback) {
     var trimmedUrlScheme = (urlScheme || "").trim();
     if (!trimmedUrlScheme) {
         errorCallback("Empty URL scheme: \"" + urlScheme + "\".");
-        return;
+        return undefined;
     }
     return trimmedUrlScheme;
 }
@@ -18,24 +18,11 @@ function checkUrlScheme(urlScheme, errorCallback) {
 var appAvailability = {
 
     check: function(urlScheme, successCallback, errorCallback) {
-        urlScheme = checkUrlScheme(urlScheme, function() { callback(false); });
+        urlScheme = checkUrlScheme(urlScheme, errorCallback);
         if (urlScheme) {
             cordova.exec(
-                function(success) { callback(success); },
-                function(error) { callback(error); },
-                "AppAvailability",
-                "checkAvailability",
-                [urlScheme]
-            );
-        }
-    },
-    
-    checkBool: function(urlScheme, callback) {
-        urlScheme = checkUrlScheme(urlScheme, function() { callback(false); });
-        if (urlScheme) {
-            cordova.exec(
-                function(success) { callback(success); },
-                function(error) { callback(error); },
+                function(success) { successCallback(success); },
+                function(error) { errorCallback(error); },
                 "AppAvailability",
                 "checkAvailability",
                 [urlScheme]
