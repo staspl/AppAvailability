@@ -53,7 +53,6 @@ public class AppAvailability extends CordovaPlugin {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 return pm.getPackageInfo(uri, PackageManager.PackageInfoFlags.of(PackageManager.GET_ACTIVITIES));
             } else {
-                @SuppressWarnings("deprecation")
                 return pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
             }
         } catch (PackageManager.NameNotFoundException e) {
