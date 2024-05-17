@@ -72,13 +72,17 @@ $ cordova plugin add https://github.com/kelter-antunes/AppAvailability.git --sav
 ### iOS
 
 ```javascript
-appAvailability.check(
+window.appAvailability.check(
     'twitter://', // URI Scheme
-    function() {  // Success callback
-        console.log('Twitter is available');
+    function(isAvailable) { // Success callback
+        if (isAvailable) {
+            console.log('Twitter is available');
+        } else {
+            console.log('Twitter is not available');
+        }
     },
-    function() {  // Error callback
-        console.log('Twitter is not available');
+    function(error) { // Failure callback
+        console.error("Error checking app availability:", error);
     }
 );
 ```
@@ -86,41 +90,21 @@ appAvailability.check(
 ### Android
 
 ```javascript
-appAvailability.check(
+window.appAvailability.check(
     'com.twitter.android', // Package Name
-    function(info) {           // Success callback        
-        // Info parameter is available only for android
-        console.log('Twitter is available, and it\'s version is ', info.version);
+    function(isAvailable) { // Success callback
+        if (isAvailable) {
+            console.log('Twitter is available');
+        } else {
+            console.log('Twitter is not available');
+        }
     },
-    function() {           // Error callback
-        console.log('Twitter is not available');
+    function(error) { // Failure callback
+        console.error("Error checking app availability:", error);
     }
 );
 ```
 
-### Full Example
-
-```javascript
-var scheme;
-
-// Don't forget to add the cordova-plugin-device plugin for `device.platform`
-if(device.platform === 'iOS') {
-    scheme = 'twitter://';
-}
-else if(device.platform === 'Android') {
-    scheme = 'com.twitter.android';
-}
-
-appAvailability.check(
-    scheme,       // URI Scheme or Package Name
-    function() {  // Success callback
-        console.log(scheme + ' is available :)');
-    },
-    function() {  // Error callback
-        console.log(scheme + ' is not available :(');
-    }
-);
-```
 
 ## 4. Some URI Schemes / Package Names
 
