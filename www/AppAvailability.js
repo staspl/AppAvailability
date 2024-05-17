@@ -7,22 +7,28 @@ const cordova = require('cordova');
  */
 class AppAvailability {
     /**
-     * Check the availability of an app by its URL scheme.
+     * Check the availability of an app by its package name.
      *
-     * @param {String}   urlScheme - The URL scheme of the app to check.
-     * @param {Function} onSuccess - Callback function to be called on success.
-     * @param {Function} onFail    - Callback function to be called on failure.
+     * @param {String}   packageName - The package name of the app to check.
+     * @param {Function} onSuccess   - Callback function to be called on success.
+     * @param {Function} onFail      - Callback function to be called on failure.
      */
-    check(urlScheme, onSuccess, onFail) {
-        if (typeof urlScheme !== "string") {
-            return onFail(new Error("urlScheme must be a string"));
+    check(packageName, onSuccess, onFail) {
+        if (typeof packageName !== "string") {
+            return onFail(new Error("packageName must be a string"));
         }
         
-        if (!urlScheme.trim()) {
-            return onFail(new Error("urlScheme cannot be empty"));
+        if (!packageName.trim()) {
+            return onFail(new Error("packageName cannot be empty"));
         }
 
-        cordova.exec(onSuccess, onFail, "AppAvailability", "checkAvailability", [urlScheme]);
+        cordova.exec(
+            result => onSuccess(result === 1),
+            onFail,
+            "AppAvailability",
+            "checkAvailability",
+            [packageName]
+        );
     }
 }
 
