@@ -41,13 +41,12 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="AppAvailability">
-                <param name="android-package" value="com.kelter-antunes.appavailability.AppAvailability" />
+                <param name="android-package" value="com.kelter.appavailability.AppAvailability" />
             </feature>
         </config-file>
 
    
-
-        <source-file src="src/android/AppAvailability.java" target-dir="src/com/kelter/appavailability/" />
+        <source-file src="src/android/AppAvailability.java" target-dir="src/com/kelter/appavailability" />
 
         <hook type="after_plugin_add" src="hooks/update_android_manifest.js" />
     </platform>
