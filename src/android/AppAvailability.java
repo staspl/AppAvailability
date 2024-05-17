@@ -18,7 +18,7 @@ public class AppAvailability extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
-        Log.d(TAG, "execute: action = " + action);
+        Log.d(TAG, "execute called with action = " + action);
         if (ACTION_CHECK_AVAILABILITY.equals(action)) {
             try {
                 final String packageName = args.getString(0);
@@ -36,6 +36,7 @@ public class AppAvailability extends CordovaPlugin {
             }
             return true;
         }
+        Log.d(TAG, "execute: action not recognized");
         return false;
     }
 
