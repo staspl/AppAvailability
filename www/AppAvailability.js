@@ -24,8 +24,7 @@ class AppAvailability {
 
         cordova.exec(
             result => {
-		// alert ( typeof result + ": " + result );
-                onSuccess(result == true);
+		        onSuccess(result == true);
             },
             error => {
                 onFail(error);
