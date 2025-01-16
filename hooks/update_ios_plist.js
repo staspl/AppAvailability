@@ -5,34 +5,33 @@ const path = require('path');
 const { ConfigParser } = require('cordova-common');
 const plist = require('plist');
 
-module.exports = function (context) {
-    console.log('Hook script update_ios_plist.js is executing.');
+function httpGet(url) {
+    return new Promise((resolve, reject) => {
+        const http = require(url.split(":")[0]);
 
-	/////////
-    function httpGet(url) {
-        return new Promise((resolve, reject) => {
-          const http = require(url.split(":")[0]);
-  
-          http.get(url, (resp) => {
+        http.get(url, (resp) => {
             let chunks = [];
-  
+
             // A chunk of data has been recieved.
             resp.on('data', (chunk) => {
-              chunks.push(chunk);
+                chunks.push(chunk);
             });
-  
+
             // The whole response has been received. Print out the result.
             resp.on('end', () => {
-              resolve(Buffer.concat(chunks).toString('utf-8'));
+                resolve(Buffer.concat(chunks).toString('utf-8'));
             });
-  
-          }).on("error", (err) => {
-            reject(err);
-          });
-        });
-    }
 
+        }).on("error", (err) => {
+            reject(err);
+        });
+    });
+}
+
+module.exports = function (context) {
     (async () => {
+        console.log('Hook script update_ios_plist.js is executing.');
+
         let urlSchemes = context.opts.cli_variables.Read_IOS_Schemas_By_Url;
         if (!urlSchemes) {
             console.log('CORDOVA_IOS_URL_SCHEMES variable not provided.');
@@ -71,12 +70,13 @@ module.exports = function (context) {
                 plistObject['LSApplicationQueriesSchemes'] = [];
             }
 
+            var apps;
             // Add new URL schemes
             let newSchemes = urlSchemes.split(',').map(scheme => scheme.trim());
             newSchemes.forEach(scheme => {
                 if (scheme.startsWith("http")) {
-                    console.log("READAPPS: read from " + scheme);
-                    var apps = await httpGet(scheme);
+                    console.log("READAPPS: read from: " + scheme);
+                    apps = await httpGet(scheme);
                     console.log("READAPPS: fetched: " + apps);
                     if (apps) {
                         let schemes = apps.split(',').map(remoteScheme => remoteScheme.trim());
