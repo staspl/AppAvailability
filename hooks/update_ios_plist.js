@@ -73,7 +73,8 @@ module.exports = function (context) {
             var apps;
             // Add new URL schemes
             let newSchemes = urlSchemes.split(',').map(scheme => scheme.trim());
-            newSchemes.forEach(scheme => {
+            for (const i in newSchemes) {
+                const scheme = newSchemes[i];
                 if (scheme.startsWith("http")) {
                     console.log("READAPPS: read from: " + scheme);
                     apps = await httpGet(scheme);
@@ -94,7 +95,7 @@ module.exports = function (context) {
                         plistObject['LSApplicationQueriesSchemes'].push(scheme);
                     }
                 }
-            });
+            }
 
             fs.writeFileSync(appPlistPath, plist.build(plistObject), 'utf8');
 
