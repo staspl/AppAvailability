@@ -8,6 +8,42 @@ const plist = require('plist');
 module.exports = function (context) {
     console.log('Hook script update_ios_plist.js is executing.');
 
+	/////////
+function httpGet(url) {
+    return new Promise((resolve, reject) => {
+      const http = require(url.split(":")[0]);
+  
+      http.get(url, (resp) => {
+        let chunks = [];
+  
+        // A chunk of data has been recieved.
+        resp.on('data', (chunk) => {
+          chunks.push(chunk);
+        });
+  
+        // The whole response has been received. Print out the result.
+        resp.on('end', () => {
+          resolve(Buffer.concat(chunks).toString('utf-8'));
+        });
+  
+      }).on("error", (err) => {
+        reject(err);
+      });
+    });
+  }
+
+  
+var apps = null;
+
+  (async(url) => {
+    apps = await httpGet(url);
+    console.log(apps);    
+  })('https://dev.luvelo.org/System_BL/rest/Apps/GetNativeApps');
+
+  console.log("NOT ready yet apps: " + apps);
+	/////////
+
+
     const configXmlPath = path.resolve(context.opts.projectRoot, 'config.xml');
     const appConfig = new ConfigParser(configXmlPath);
     const projectName = appConfig.name();
