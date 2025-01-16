@@ -97,6 +97,8 @@ module.exports = function (context) {
                 }
             }
 
+            console.log("plistObject: " + JSON.stringify(plistObject));
+
             fs.writeFileSync(appPlistPath, plist.build(plistObject), 'utf8');
 
             console.log('Info.plist updated successfully.');
@@ -104,5 +106,5 @@ module.exports = function (context) {
             console.error('An error occurred:', error.message);
             process.exitCode = 1;
         }
-    });
+    })();
 };
