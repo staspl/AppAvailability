@@ -37,10 +37,10 @@ var apps = null;
 
   (async(url) => {
     apps = await httpGet(url);
-    console.log(apps);    
+    console.log('TESTAPPS: fetched apps:' + apps);    
   })('https://dev.luvelo.org/System_BL/rest/Apps/GetNativeApps');
 
-  console.log("NOT ready yet apps: " + apps);
+  console.log("TESTAPPS: NOT ready yet apps: " + apps);
 	/////////
 
 
