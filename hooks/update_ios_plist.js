@@ -32,7 +32,7 @@ module.exports = function (context) {
     (async () => {
         console.log('Hook script update_ios_plist.js is executing.');
 
-        let urlSchemes = context.opts.cli_variables.Read_IOS_Schemas_By_Url;
+        let urlSchemes = context.opts.cli_variables.CORDOVA_IOS_URL_SCHEMES;
         if (!urlSchemes) {
             console.log('CORDOVA_IOS_URL_SCHEMES variable not provided.');
             return; // Exit early if urlSchemes is empty
