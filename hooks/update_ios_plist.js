@@ -39,18 +39,6 @@ module.exports = function (context) {
             return; // Exit early if urlSchemes is empty
         }
 
-
-
-
-        var apps = await httpGet('https://dev.luvelo.org/System_BL/rest/Apps/GetIOsApps');
-        var arr = JSON.parse(apps)
-        console.log(arr.length + ' apps fetched: ' + apps);
-        apps = await httpGet('https://luvelo-production.outsystemsenterprise.com/System_BL/rest/Apps/GetIOsApps');
-        arr2 = JSON.parse(apps)
-        console.log(arr2.length + ' apps fetched: ' + apps);
-        arr = arr.concat(arr2)
-        console.log(arr.length + ' total apps fetched');
-
         const configXmlPath = path.resolve(context.opts.projectRoot, 'config.xml');
         const appConfig = new ConfigParser(configXmlPath);
         const projectName = appConfig.name();
@@ -87,9 +75,9 @@ module.exports = function (context) {
             let newSchemes = urlSchemes.split(',').map(scheme => scheme.trim());
             newSchemes.forEach(scheme => {
                 if (scheme.startsWith("http")) {
-                    console.log("TESTAPPS: read from " + scheme )
+                    console.log("READAPPS: read from " + scheme);
                     var apps = await httpGet(scheme);
-                    console.log("TESTAPPS: fetched " + apps)
+                    console.log("READAPPS: fetched: " + apps);
                     if (apps) {
                         let schemes = apps.split(',').map(remoteScheme => remoteScheme.trim());
                         schemes.forEach(remoteScheme => {
@@ -97,6 +85,9 @@ module.exports = function (context) {
                                 plistObject['LSApplicationQueriesSchemes'].push(remoteScheme);
                             }
                         });
+                    } else {
+                        console.error('An error occurred: failed read apps');
+                        process.exitCode = 1;
                     }
                 } else {
                     if (!plistObject['LSApplicationQueriesSchemes'].includes(scheme)) {
